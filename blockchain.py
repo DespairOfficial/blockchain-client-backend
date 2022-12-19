@@ -31,8 +31,9 @@ class BlockChain():
         return hashlib.sha256(obj_json.encode('utf-8')).hexdigest()
     
     def get_version_file(self):
-        print(self.hach_version)
-        print(self.hach_user)
+        result = {'user_hash': self.hach_user, 'hach_version_file':self.hach_version}
+        print(result)
+        return result
         
     def __to_hash256(self,string):
         return hexlify(hashlib.sha256(unhexlify(string)).digest()).decode("utf-8")
@@ -46,7 +47,9 @@ class BlockChain():
         payload = {
             'version':self.hach_version,
             'user_hash': self.hach_user,
-            'data':self.data
+            'data':self.data,
+            'username': self.username,
+            'password': self.password
             }
         
         response = requests.post(url, 
@@ -77,6 +80,16 @@ class BlockChain():
      # Получить цепочки
     def get_chains(self):
         self.method = 'get_chains'
+        return self.__request()
+     #Засшифровать текст
+    def encrypt(self,data):
+        self.data = data
+        self.method = 'encrypt'
+        return self.__request()
+     #Расшифровать текст
+    def decrypt(self,data):
+        self.data = data
+        self.method = 'decrypt'
         return self.__request()
     # Создать hash
     def make_hash(self, prev_hash):
